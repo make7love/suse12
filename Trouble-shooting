@@ -1,6 +1,5 @@
 2018/02/22
 sed / egrep里面，表示空格的正则：
-
 $(egrep "auth[ ]*required[ ]*pam_wheel.so[ ]*group=wheel" /etc/pam.d/su 
 或者：
 $(egrep "auth\s+required\s+pam_wheel.so\s+group=wheel" /etc/pam.d/su 
