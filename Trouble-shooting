@@ -6,4 +6,4 @@ $(egrep "auth[ ]*required[ ]*pam_wheel.so[ ]*group=wheel" /etc/pam.d/su
 $(egrep "auth\s+required\s+pam_wheel.so\s+group=wheel" /etc/pam.d/su 
 
 特别注意：
-sed的正则只能识别第一种[ ]*的形式；
+sed 的正则只能识别第一种[ ]*的形式；
