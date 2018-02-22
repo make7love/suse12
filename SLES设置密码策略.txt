@@ -1,0 +1,90 @@
+How To : Password Complexity in SLES
+This document (7008156) is provided subject to the disclaimer at the end of this document.
+
+
+come from : https://www.novell.com/support/kb/doc.php?id=7008156
+
+
+Environment
+SUSE LINUX Enterprise Server 9 
+SUSE Linux Enterprise Server 10 Service Pack 3
+SUSE Linux Enterprise Server 11 Service Pack 1
+SUSE Linux Enterprise Server 11 Service Pack 2 (SLES 11 SP2)
+SUSE Linux Enterprise Server 11 Service Pack 3 (SLES 11 SP3)
+SUSE Linux Enterprise Server 11 Service Pack 4 (SLES 11 SP4)
+SUSE Linux Enterprise Server 12 Service Pack 1 (SLES 12 SP1)
+Situation
+You may need to have more complexity in your environment for passwords depending on policies and rules that have been setup in your corporation. The solution provided below will enable you to make the changes necessary to comply with those rules and policies. 
+
+Formerly known as TID# 10099535
+Resolution
+This solution will require that you have root permissions to perform these changes, so be sure you have these permissions before proceeding.
+
+only SLES 10 and earlier
+1. Change to directory /etc/pam.d/
+
+2. Open the file login with vi and add this line as first line if not already there, or other lines as required according to the doc from the link below.
+
+﻿password requisite      pam_cracklib.so minlen=8 lcredit=-1 ucredit=-1 dcredit=-1 ocredit=-1
+You can make the changes you need to the options above after the pam_cracklib.so. This is just an example of what it might look like.
+
+Please refer to the documentation below for more information on the options available.
+
+﻿/usr/share/doc/packages/pam/README.cracklib
+
+﻿/usr/share/doc/packages/pam/modules/README.pam_cracklib
+
+3. Make sure all other lines do have the option use_authtok listed, as far they do support this option. Refer to the manpage if needed.
+4. Once finished then save and close.  Then verify the changes are persistent with a system re-boot.
+
+SLES 11 SP1 and later
+
+execute following command:
+
+pam-config -a --cracklib --cracklib-minlen=8 --cracklib-lcredit=-1 --cracklib-ucredit=-1 --cracklib-dcredit=-1 --cracklib-ocredit=-1
+You should now be able to achieve greater password complexity on your Server.
+
+
+Note: Please be aware that this only work if you have not modified the configuration already after a default installation.
+Note: Please be aware that modifying any PAM related setting may cause security issues if not done properly, we strongly recommend to open a service request if you are unsure.
+Additional Information
+Password history and complexity example:
+
+For instance, if the password's requirements are:
+
+min length = 10
+lower case = 1
+upper case =1
+number = 1
+passwords to remember (password history) = 3
+
+SLES 10
+
+Password complexity and history can be accomplished with pam_cracklib and pam_pwcheck
+
+The file /etc/pam.d/common-password  would contain the following entries:
+
+password  requisite      pam_cracklib.so dcredit=-1 ucredit=-1 lcredit=-1 minlen=10 
+
+password required pam_pwcheck.so nullok use_authtok remember=3 
+
+password  required       pam_unix2.so    nullok use_authtok md5
+
+
+SLES11 and later
+
+Password complexity and history can be accomplished with pam_cracklib, pam_pwhistory
+
+Execute following command:
+
+pam-config -a --cracklib --cracklib-minlen=10 --cracklib-lcredit=-1 --cracklib-ucredit=-1 --cracklib-dcredit=-1 --pwhistory --pwhistory-use_authtok --pwhistory-remember=3
+
+Note: Please be aware that this will only work if you have not modified the configuration already after a default installation.
+Note: Please be aware that modifying any PAM related setting may cause security issues if not done properly, we strongly recommend to open a service request if you are unsure.
+Change Log
+17 March 2011 - Nefi Munoz - Added "SLES 10 and 11" subheading to "Resolution" section and environment.   
+1 August 2011 - Nefi Munoz - Added comment about pam_pwhistory not being available in SLES 10 to configuration example provided under "SLES 10 and 11" subheading
+28 September 20615 - Paul Zirnik - rewritten the TID to use pam-config where possible.
+2 November 2016 - Paul Zirnik - removed retry options
+Disclaimer
+This Support Knowledgebase provides a valuable tool for NetIQ/Novell/SUSE customers and parties interested in our products and solutions to acquire information, ideas and learn from one another. Materials are provided for informational, personal or non-commercial use within your organization and are presented "AS IS" WITHOUT WARRANTY OF ANY KIND.
