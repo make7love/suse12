@@ -1,5 +1,6 @@
 常用shell命令记录；
 
+2018/02/24
 
 1). 查找当前目录下后缀名为txt的文件
 
@@ -77,4 +78,5 @@ find . -type f -name "*.c" -exec cat {} \; > all_c_files.txt
 
 9). 与其他命令结合使用
 	8.1查找目录下包含特定字符串的文件
-	find . -name "file_name" | xargs grep -nir "search_string"  
+	find . -name "file_name" | xargs grep -nir "search_string"
+	
