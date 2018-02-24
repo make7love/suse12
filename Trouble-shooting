@@ -1,4 +1,4 @@
-2018/02/22
+1). shell-sed-egrep 正则-注意事项
 sed / egrep里面，表示空格的正则：
 $(egrep "auth[ ]*required[ ]*pam_wheel.so[ ]*group=wheel" /etc/pam.d/su 
 或者：
@@ -10,3 +10,27 @@ $(egrep "auth\s+required\s+pam_wheel.so\s+group=wheel" /etc/pam.d/su
 3). egrep使用[ ]*的形式，只能识别<space>;
 4). sed 识别<tab>, 可直接使用正则\t:
 	sed -n '/password\trequisite\tpam_cracklib.so/p' /etc/pam.d/common-password
+	
+	
+-----------------------------------------------------------------------------------------
+2). php无法操作系统上的/tmp目录，原因：
+
+Because systemd is configured to give nginx a private /tmp. If you must use the system /tmp 
+instead for some reason then you will need to modify the .service file to read "PrivateTmp=no".
+
+来自： https://stackoverflow.com/questions/30444914/php-has-its-own-tmp-in-tmp-systemd-private-nabcde-tmp-when-accessed-through-ng
+
+解决：
+vim /usr/lib/systemd/system/php-fpm.service
+PrivateTmp=false
+修改完后，需要多重启几次php-fpm进程；
+
+
+-----------------------------------------------------------------------------------------
+3). keepalived报错：
+systemctl status keepalived,出现如下错误消息：
+bogus VRRP packet received on eth0 
+
+之前在同网段用centos 7.3 做了一个keepalived 的实验，将virtual_router_id 的标识配置成了默认的值 51，而centos 6.8 在做keepalived 实验时，同网段不同组也将 virtual_router_id 配置成了 51 ，所以就出了上面的报错信息。
+解决方法：变量两台centos 6.8 的keepalived 主配置文件，将 virtual_router_id 的值修改成其它值即可（注：这两个节点的 virtual_router_id 必须一致）
+https://www.linuser.com/forum.php?mod=viewthread&tid=101
