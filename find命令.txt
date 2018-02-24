@@ -64,12 +64,17 @@ find . -type f -size 2k
 
 ·G------1024MB
 
-7.删除匹配的文件
+7). 删除匹配的文件
 #删除当前目录下所有的.swp文件：  
-find . -type f -name "*.swp" -delete  
-8.利用find执行命令或者动作
+find . -type f -name "*.swp" -delete
+
+8).利用find执行命令或者动作
 find命令可以借助选项-exec与其他命令进行结合。-exec算得上是find最强大的特性之一。
 
 示例：将给定目录中的所有C程序文件拼接起来写入单个文件all_c_files.txt
 find . -type f -name "*.c" -exec cat {} \; > all_c_files.txt
 "{}"是一个与"-exec"选项搭配使用的特殊字符串。对于每一个匹配的文件，"{}"会被替换成相应的文件名。
+
+9). 与其他命令结合使用
+	8.1查找目录下包含特定字符串的文件
+	find . -name "file_name" | xargs grep -nir "search_string"  
