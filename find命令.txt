@@ -1,0 +1,75 @@
+常用shell命令记录；
+
+
+1). 查找当前目录下后缀名为txt的文件
+
+find . -name "*.txt"  
+
+ 
+2). 打印出所有.txt和.pdf文件，因为find命令能够匹配所有两类文件。  
+#\)以及\)将用于-name "*.txt" -o -name "*.pdf"
+
+find .  \( -name "*.txt" -o name "*.pdf" \)
+
+3).匹配所有不以.txt结尾的文件名。 
+
+find . ! -name "*.txt"  
+4). find 参数
+-maxdepth：指定最大查找深度，即最大向指定目录下面搜索maxdepth级
+-mindepth：指定最小查找深度，即从指定目录下面第mindepth级目录开始搜索
+-type：找到对应类型的文件
+
+普通文件	f
+符号链接	l
+目录		d
+字符设备	c
+块设备		b
+套接字		s
+FIFO		p
+
+5). 根据文件时间进行搜索
+
+访问时间（-atime）：用户最近一次访问文件的时间
+
+修改时间（-mtime）：文件内容最后一次被修改的时间
+
+变化时间（-ctime）：文件元数据（例如权限和所有权）最后一次改变的时间
+
+-atime，-mtime，-ctime可作为find的时间选项。它们可以用真数值指定，单位是天，"-"表示小于，"+"表示大于。
+
+#打印出最近7天内被访问过的文件：  
+find . -type f -atime -7   
+#打印出恰好7天前被访问过的所有文件：  
+find . -type f -atime 7  
+#打印出访问时超过7天的所有文件：  
+find . -type f -atime +7  
+
+
+6). 基于文件大小的搜索
+
+#找到大于2KB的文件  
+find . -type f -size +2k  
+#找到小于2KB的文件  
+find . -type f -size -2k  
+#找到大小等于2KB的文件  
+find . -type f -size 2k  
+
+·b------块（512Bytes）
+·c------Byte
+·w------word（2Bytes）
+
+·k------1014Bytes
+
+·M-----1024KB
+
+·G------1024MB
+
+7.删除匹配的文件
+#删除当前目录下所有的.swp文件：  
+find . -type f -name "*.swp" -delete  
+8.利用find执行命令或者动作
+find命令可以借助选项-exec与其他命令进行结合。-exec算得上是find最强大的特性之一。
+
+示例：将给定目录中的所有C程序文件拼接起来写入单个文件all_c_files.txt
+find . -type f -name "*.c" -exec cat {} \; > all_c_files.txt
+"{}"是一个与"-exec"选项搭配使用的特殊字符串。对于每一个匹配的文件，"{}"会被替换成相应的文件名。
