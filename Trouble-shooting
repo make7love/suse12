@@ -34,3 +34,41 @@ bogus VRRP packet received on eth0
 之前在同网段用centos 7.3 做了一个keepalived 的实验，将virtual_router_id 的标识配置成了默认的值 51，而centos 6.8 在做keepalived 实验时，同网段不同组也将 virtual_router_id 配置成了 51 ，所以就出了上面的报错信息。
 解决方法：变量两台centos 6.8 的keepalived 主配置文件，将 virtual_router_id 的值修改成其它值即可（注：这两个节点的 virtual_router_id 必须一致）
 https://www.linuser.com/forum.php?mod=viewthread&tid=101
+
+4). keepalived 配置了notify_master , notify_slave等指令，没有执行；
+原因：
+	4-1).
+	目标脚本没有可执行权限；
+	4-2).
+	使用 "systemctl start keepalived" 这种形式启动keepalive进程， 导致执行权限不足；
+	(可通过 sudo -u keepalived sh .../notify_master.sh 这种方式进行验证)
+	
+解决：
+	重新启动操作系统
+	或者：
+	登录root账户，采用可执行文件方式启动(keepalived -S 7 -f /etc/keepalived/keepalived.conf -D -n)
+	
+5). 执行 "systemctl stop keepalived" keepalived 进程不能正常关闭；
+
+
+6). 绿盟修复扫描，修改/etc/权限为750, 造成任务账户都无法登录系统；
+
+7). sed -n '/maxscale_admin_port=[0-9]\+/p' maxscale.cnf  
+  当查询多个数字时，"+"需要转义符；
+
+8). 安装fabric后，执行任务报错：
+
+8-1). valueerror ctr mode needs counter parameter not iv
+8-2). no handlers could be found for logger paramiko.transport
+
+解决方法：
+首先查看当前paramiko版本号：
+import paramiko
+print paramiko.__version__
+paramiko-1.15
+
+一次性升级到最新版本：
+pip install paramiko --upgrade
+
+
+

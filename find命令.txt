@@ -80,3 +80,8 @@ find . -type f -name "*.c" -exec cat {} \; > all_c_files.txt
 	8.1查找目录下包含特定字符串的文件
 	find . -name "file_name" | xargs grep -nir "search_string"
 	
+10). 查找saaa日志里，包含29110的字符串；
+
+find . -name "saaa*" | xargs grep -rn "29110"
+
+	
